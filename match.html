@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Match Replay · Reading Messi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/match.css">
+</head>
+<body>
+<header class="site-head"></header>
+<main class="wrap replay">
+  <div class="match-head">
+    <p class="eyebrow" id="meta">Loading match…</p>
+    <div class="scoreboard" id="scoreboard" aria-live="polite"></div>
+    <div class="clockline">
+      <span class="clock num" id="clock">0:00</span>
+      <span id="period" class="muted"></span>
+      <span class="messi-state" id="messi-state"></span>
+      <span class="muted dir">Messi's team attacks →</span>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="banner" id="banner" hidden></div>
+    <canvas id="pitch" class="pitch-canvas" aria-label="Top-down pitch replay"></canvas>
+    <div class="tip" id="tip" hidden></div>
+  </div>
+  <p class="possrc" id="possrc"></p>
+  <canvas id="timeline" class="timeline" aria-label="Match timeline. Click to jump."></canvas>
+
+  <div class="controls" role="group" aria-label="Playback">
+    <button type="button" id="prev" class="ctl" title="Previous Messi event (←)">◀ Prev touch</button>
+    <button type="button" id="play" class="ctl primary" title="Play / pause (space)">▶ Play</button>
+    <button type="button" id="next" class="ctl" title="Next Messi event (→)">Next touch ▶</button>
+    <div class="seg" role="radiogroup" aria-label="Speed" id="speed">
+      <span class="seg-label">Speed</span>
+      <button type="button" data-v="1" role="radio">Real time</button>
+      <button type="button" data-v="5" role="radio">5×</button>
+      <button type="button" data-v="20" role="radio">20×</button>
+      <button type="button" data-v="60" role="radio">60×</button>
+    </div>
+    <button type="button" id="copy" class="ctl ghost">Copy a link to this moment</button>
+  </div>
+
+  <p class="moment" id="moment" aria-live="polite"></p>
+
+  <div class="panels">
+    <div class="panel">
+      <h2 class="ph">Layers</h2>
+      <div class="layers" id="layers"></div>
+      <h2 class="ph">Trails</h2>
+      <div class="seg" role="radiogroup" aria-label="Trail length" id="trail">
+        <button type="button" data-v="recent" role="radio">Last 2 minutes</button>
+        <button type="button" data-v="all" role="radio">Keep every mark</button>
+      </div>
+      <h2 class="ph">What the marks mean</h2>
+      <ul class="legend">
+        <li><i class="lg messi"></i><span>Messi, with his shirt number.</span></li>
+        <li><i class="lg mate"></i><span>His teammates. A heavy outline marks the goalkeeper.</span></li>
+        <li><i class="lg oppo"></i><span>The opponents.</span></li>
+        <li><i class="lg faint"></i><span>Outline only: the record hasn't placed this player in the last few seconds, so his spot is a guess between two known ones.</span></li>
+        <li><i class="lg pass"></i><span>His pass, completed. Dashed and pale: it didn't reach a teammate.</span></li>
+        <li><i class="lg carry"></i><span>His carry: running with the ball at his feet.</span></li>
+        <li><i class="lg drib"></i><span>Dribble. Filled: he got past his man. Hollow: he didn't.</span></li>
+        <li><i class="lg ball"></i><span>The ball. Jumps between recorded events in straight lines.</span></li>
+        <li><i class="lg shot-own"></i><span>Where a shot was struck: white for Messi's team, yellow for Messi. Ringed: a goal.</span></li>
+        <li><i class="lg shot-opp"></i><span>Shot by the opponent.</span></li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2 class="ph">Messi in this match</h2>
+      <dl class="mstats" id="mstats"></dl>
+      <p class="muted small" id="isthatalot"></p>
+      <h2 class="ph">Goals and Messi's shots</h2>
+      <ol class="shots" id="shots"></ol>
+      <h2 class="ph">Other matches</h2>
+      <div class="others" id="others"></div>
+    </div>
+  </div>
+</main>
+<footer></footer>
+<script src="assets/common.js"></script>
+<script src="assets/match.js"></script>
+</body>
+</html>

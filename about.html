@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>What You Can See · Reading Messi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site-head"></header>
+<main>
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <h1>What you can see here</h1>
+        <p>Each card opens a real match where the thing happens. The picks come from the archive itself.</p>
+      </div>
+      <div class="lessons" id="lessons"></div>
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="wrap prose method">
+      <h2>How we counted</h2>
+      <p>The source is the StatsBomb open event data. Analysts logged every on-ball action in each match: who did it, when, where on the pitch, and how it ended. We fetched it once, kept Messi's actions, every shot by either team, and the location of every event so the ball can be drawn. Nothing was added.</p>
+
+      <h3 id="m-goals">Goals</h3>
+      <p>A goal is a shot event by Messi whose outcome is <code>Goal</code>, in normal or extra time. Penalty shoot-out kicks are shown in the replay but never counted. Minutes run from kick-off, or from the minute he came on, to the final whistle or the minute he went off. Stoppage time is included.</p>
+
+      <h3 id="m-foot">Left foot</h3>
+      <p>The body part the analyst recorded for the shot: left foot, right foot, head, or other.</p>
+
+      <h3 id="m-box">From outside the box</h3>
+      <p>Measured from the spot the shot was struck from. The penalty area is the 18-yard box on StatsBomb's 120 by 80 yard pitch. Penalties are left out of this count, since they are all taken from inside the box.</p>
+
+      <h3 id="m-assists">Assists</h3>
+      <p>A pass the record marks as a goal assist: the last pass before a teammate scored. Shot assists are counted as "chances created" on each match page.</p>
+
+      <h3 id="m-dribbles">Dribbles</h3>
+      <p>A dribble is an attempt to beat a defender while keeping the ball. Completed means he got past and kept it. Running with the ball into space is a carry, which is a different event.</p>
+
+      <h3 id="m-setpiece">Dead-ball goals</h3>
+      <p>Goals from shots recorded as type <code>Penalty</code> or <code>Free Kick</code>. A goal after a free kick was played short or crossed counts as open play here.</p>
+
+      <h3 id="m-players">Where the players are</h3>
+      <p>No match here has full tracking data, so each player's spot is built from three records, best first:</p>
+      <p><b>Shot freeze-frames.</b> At every shot StatsBomb logged the position of each player it could see, by name. At those instants the pitch is exact.</p>
+      <p><b>360 frames</b>, in 106 matches: La Liga 2020–21, both PSG seasons, the 2022 World Cup and the 2023 Inter Miami games. At every event, each player in the broadcast camera's view was recorded. These dots carry no names, so we give each one to the player we already expected nearest to it, within 15 yards. Players off camera keep their last spot until they reappear.</p>
+      <p><b>The player's own events.</b> Each time a player passes, receives, presses, tackles or shoots, the record places him. Between two of his events, he slides in a straight line.</p>
+      <p>A marker grows faint when the nearest record of that player is more than a couple of seconds away. Hover any player to see his name and how long it has been.</p>
+
+      <h3>Which way they attack</h3>
+      <p>StatsBomb records each event from the acting team's point of view. We flip the opponent's events so Messi's team always attacks to the right.</p>
+
+      <h3>What isn't here</h3>
+      <p>Matches StatsBomb hasn't released for free: most of his Champions League and Copa del Rey matches, Argentina's qualifiers and friendlies, the 2014 World Cup, earlier Copa Américas, and most of his Inter Miami matches. Rebuilding the data with <code>scripts/build_data.py</code> picks up anything StatsBomb adds later.</p>
+    </div>
+  </section>
+</main>
+<footer></footer>
+<script src="assets/common.js"></script>
+<script>
+(async () => {
+  RM.chrome('about.html');
+  const idx = await RM.loadIndex().catch(() => []);
+  if (!idx.length) return;
+  const pick = (f, sort) => idx.filter(f).sort(sort)[0];
+  const byNew = (a, b) => b.date.localeCompare(a.date);
+  const outside = (m) => m.gl.some((g) => g[3] !== 'Penalty' && !(g[0] >= 102 && g[1] >= 18 && g[1] <= 62));
+  const lessons = [
+    ['The final', 'The 2022 World Cup final, every touch through extra time and the shoot-out.', pick((m) => m.comp === 'FIFA World Cup' && m.season === '2022' && m.stage === 'Final')],
+    ['A hat-trick', 'Three goals or more in one match. The freeze-frame at each goal shows who was around him.', pick((m) => m.goals >= 3, (a, b) => b.goals - a.goals || byNew(a, b))],
+    ['From distance', 'A goal struck from outside the penalty area. Watch where the defenders stood.', pick(outside, byNew)],
+    ['The provider', 'His match with the most assists here. Turn on "Keep every mark" to see every pass.', pick((m) => m.assists > 0, (a, b) => b.assists - a.assists || byNew(a, b))],
+    ['Taking players on', 'The match where he attempted the most dribbles. Diamonds mark each one.', pick(() => true, (a, b) => b.dribbles - a.dribbles)],
+    ['The debut season', 'His first La Liga matches in the archive, as a 17-year-old off the bench.', pick(() => true, (a, b) => a.date.localeCompare(b.date))],
+  ].filter((l) => l[2]);
+  document.getElementById('lessons').innerHTML = lessons.map(([h, p, m]) => `
+    <article class="lesson"><h3>${h}</h3><p>${p}</p>
+    <p class="muted">${RM.esc(m.team)} v ${RM.esc(m.opp)}, ${RM.fmtDate(m.date)} · ${m.goals}G ${m.assists}A</p>
+    <a href="match.html?id=${m.id}">See it in the replay →</a></article>`).join('');
+})();
+</script>
+</body>
+</html>

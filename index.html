@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reading Messi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site-head"></header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <p class="eyebrow">602 matches · 2004 to 2024</p>
+      <h1>Every touch, <span>on the record</span></h1>
+      <p class="lede">Lionel Messi's matches, replayed from the event record. Every player is on the pitch, and Messi's passes, carries, dribbles and shots are drawn where they happened, in order. Nothing is modelled. Every mark comes from a recorded event.</p>
+      <div class="actions">
+        <a class="button" id="final-link" href="archive.html">Replay the 2022 World Cup final →</a>
+        <a class="button ghost" href="archive.html">Browse every match</a>
+      </div>
+    </div>
+    <figure>
+      <canvas class="pitch-canvas" id="goalmap" aria-label="Map of every goal Messi scored in this archive, by shot location"></canvas>
+      <figcaption id="goalmap-cap">Where each goal in the archive was struck from. Yellow: left foot. White: right foot. Ringed: penalty.</figcaption>
+    </figure>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>What we count</h2>
+        <p>Totals across the matches held here, not his whole career. Shoot-out penalties are left out of every figure.</p>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Pick a season</h2>
+        <p>Every match we hold, grouped by club and season. The bar shows goals per 90 minutes against his best season here.</p>
+      </div>
+      <div class="eras" id="eras"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head"><h2>What this site claims, and what it doesn't</h2></div>
+      <ul class="claims">
+        <li><b>Not every game he played.</b> This archive holds the matches StatsBomb has released for free: almost all of his La Liga matches for Barcelona, his two Ligue 1 seasons with PSG, three Champions League finals, the 2018 and 2022 World Cups, the 2024 Copa América and a handful of 2023 Inter Miami league games. Most Champions League, Copa del Rey and Argentina qualifiers and friendlies are absent.</li>
+        <li><b>A replay, not video.</b> All 22 players are on the pitch, with Messi highlighted. In 106 matches their positions come from StatsBomb's 360 camera frames. In the rest, each player is placed by his own recorded actions and the freeze-frame at every shot. A faint marker means the spot is a guess between two known ones.</li>
+        <li><b>Nothing is modelled.</b> No expected goals, no ratings, and no movement beyond straight lines between known spots. Counts are of events in the record.</li>
+        <li><b>One direction.</b> Messi's team always attacks to the right, in both halves, so his work is easy to compare across the match.</li>
+        <li><b>How we counted.</b> Every definition is written out on <a href="about.html#method">What you can see here</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer></footer>
+<script src="assets/common.js"></script>
+<script src="assets/home.js"></script>
+</body>
+</html>
